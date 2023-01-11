@@ -21,3 +21,4 @@ def getWhole(Id) -> list:
             pass
     MusicList.close()
     return ListOfList
+
