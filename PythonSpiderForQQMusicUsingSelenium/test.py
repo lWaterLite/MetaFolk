@@ -9,6 +9,7 @@ class Song:
     MediaUrl = ''
     Songmid = ''
 
+
     def show(self):
         print("name : " + self.name)
         print("Singer : " + self.Singer)

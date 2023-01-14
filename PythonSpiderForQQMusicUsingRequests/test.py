@@ -29,6 +29,8 @@ print(Singer.string)
 
 
 
+
+
 # Single.songName = tree.xpath('/html/body/div/div/div[2]/div[1]/div/div[1]/h1')
 # Single.artists = tree.xpath('/html/body/div/div/div[2]/div[2]/div[1]/div[1]/div[2]/div')
 # Single.artists = tree.xpath('/html/body/div/div/div[2]/div[1]/div/div[2]/a')
