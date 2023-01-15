@@ -10,7 +10,7 @@ class Song:
     Singer = ''
     lyrics = ''
     MediaUrl = ''
-    Songmid = ''
+    SongMId = ''
 
     def show(self):
         print("name : " + self.name)
@@ -41,8 +41,11 @@ def getSingle(Id) -> Song:
         Id = ''
         for i in range(index + 11, len(URL)):
             Id = Id + URL[i]
-        Single.Songmid = Id
+        Single.SongMId = Id
         MobileUrl = 'https://i.y.qq.com/v8/playsong.html?songmid={}'.format(Id)
+        options = webdriver.EdgeOptions()
+        mobileEmulation = {"deviceName": "iPhone 6"}
+        options.add_experimental_option("mobileEmulation", mobileEmulation)
         Mobile = webdriver.Edge()
         Mobile.get(url=MobileUrl)
         time.sleep(5)
@@ -56,6 +59,6 @@ def getSingle(Id) -> Song:
         Error.name = 'Error'
         Error.Singer = 'Error'
         Error.Lyrics = 'Error'
-        Error.Songmid = 'Error'
+        Error.SongMId = 'Error'
         Error.MediaUrl = 'Error'
         return Error
