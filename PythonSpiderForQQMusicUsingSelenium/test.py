@@ -37,5 +37,15 @@ Single.Singer = Page.find_element(
 Lyrics = Page.find_element(
     by=By.XPATH, value='/html/body/div/div/div[2]/div[2]/div[1]/div[1]/div[2]/div')
 Single.Lyrics = Lyrics.text
+# Single.show()
+options = webdriver.EdgeOptions()
+mobileEmulation = {"deviceName": "iPhone 6"}
+options.add_experimental_option("mobileEmulation", mobileEmulation)
+Mobile = webdriver.Edge(options=options)
+Mobile.get(url='https://i.y.qq.com/v8/playsong.html?songmid=004JlZmv4MmD14')
+time.sleep(5)
+MediaUrl = Mobile.find_element(by=By.XPATH, value='//audio')
+Single.MediaUrl = MediaUrl.get_attribute('src')
 Single.show()
+Mobile.close()
 Page.close()
