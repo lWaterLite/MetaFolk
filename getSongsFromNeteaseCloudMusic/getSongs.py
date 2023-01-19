@@ -2,6 +2,7 @@
 import requests
 import re
 import json
+import pymysql
 
 
 class Song:
@@ -84,8 +85,11 @@ def getSongIdListFromAlbum(albumId):
     count = 1
 
     while albumData.get('code') != 200:
+
         count += 1
+
         print('第' + str(count) + '次查询' + albumId + '专辑信息...')
+
         albumData = requests.get(url=albumUrl, headers=headers).json()
 
     albumSongs = albumData.get('album').get('songs')
@@ -97,11 +101,54 @@ def getSongIdListFromAlbum(albumId):
     return songIdList
 
 
+def putSongListIntoDB(songList):
+    """
+
+    :param songList: a List of instances of class Song
+    :return:
+    """
+
+    db = pymysql.connect(host='localhost', user='root', password='root', database='metafolk')
+
+    print('数据库连接成功')
+
+    cursor = db.cursor()
+
+    for song in songList:
+
+        insert_Song = "insert into song(song_name) values('{song_name}');".format(song_name=song.songName)
+
+        cursor.execute(insert_Song)
+
+        get_song_id = "select song_id from song order by song_id desc limit 1;"
+
+        cursor.execute(get_song_id)
+
+        insert_item_song = "insert into item_song(song_ref_id, item_singer) values({song_ref_id}, " \
+                           "'{item_singer}');".format(
+                            song_ref_id=cursor.fetchone()[0], item_singer=song.artists)
+
+        cursor.execute(insert_item_song)
+
+        get_item_id = "select item_id from item_song order by item_id desc limit 1;"
+
+        cursor.execute(get_item_id)
+
+        insert_item_lyrics = "insert into item_lyrics(item_ref_id, lyrics) values({item_ref_id}, " \
+                             "'{lyrics}');".format(
+                              item_ref_id=cursor.fetchone()[0], lyrics=song.lyric)
+
+        cursor.execute(insert_item_lyrics)
+
+    db.commit()
+
+    cursor.close()
+
+    db.close()
+
+
 if __name__ == '__main__':
-    # song = getSong('304827')
-    # song.show()
-    # songIdList = getSongIdListFromAlbum('30191')
-    # print(songIdList)
+
     headers = {
         'user-agent': 'Mozilla/5.0(Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, likeGecko) Chrome/'
                       '108.0.0.0 Safari/537.36 Edg/108.0.1462.76'
@@ -119,7 +166,7 @@ if __name__ == '__main__':
 
     for i in range(len(albums)):
 
-        if i < 3:
+        if i < 1:
 
             albumId = albums[i].get('idStr')
 
@@ -133,16 +180,18 @@ if __name__ == '__main__':
 
         songList.append(song)
 
-    with open('songList.json', 'w', encoding='utf-8') as fp:
+    putSongListIntoDB(songList)
 
-        fp.write('[')
-
-        for i in range(len(songList) - 1):
-
-            json.dump(obj=songList[i].__dict__, fp=fp, ensure_ascii=False)
-
-            fp.write(',')
-
-        json.dump(obj=songList[-1].__dict__, fp=fp, ensure_ascii=False)
-
-        fp.write(']')
+    # with open('songList.json', 'w', encoding='utf-8') as fp:
+    #
+    #     fp.write('[')
+    #
+    #     for i in range(len(songList) - 1):
+    #
+    #         json.dump(obj=songList[i].__dict__, fp=fp, ensure_ascii=False)
+    #
+    #         fp.write(',')
+    #
+    #     json.dump(obj=songList[-1].__dict__, fp=fp, ensure_ascii=False)
+    #
+    #     fp.write(']')
