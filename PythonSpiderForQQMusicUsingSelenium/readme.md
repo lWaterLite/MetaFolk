@@ -30,6 +30,6 @@ Song对象
 本程序需要手动登录 手动登录结束后，出现'Please enter an notification to indicate the success of login'   
 表示需要输入一个提示来表明成功登录，随便输入都行，然后程序就会自动运行，获取歌曲的名字，   
 歌手，歌词，全部显示在console中,程序会有些慢，我设置的time.sleep(5)
-萌新第一次写爬虫,只会用selenium.......不多说了，学requests去了
-
+萌新第一次写爬虫,只会用selenium.......不多说了，学requests去了   
+记得填完整密码
     
